@@ -1,10 +1,9 @@
-import json
 from PyQt5.QtWidgets import (
     QMainWindow, QLabel, QLineEdit, QComboBox, QPushButton, QVBoxLayout,
-    QProgressBar, QWidget, QFileDialog, QHBoxLayout, QDateEdit
+    QProgressBar, QWidget, QFileDialog, QHBoxLayout, QDateEdit, QMessageBox
 )
 from PyQt5.QtCore import QDate
-
+import json
 
 class MediaIngestGUI(QMainWindow):
     SETTINGS_FILE = "settings.json"
@@ -14,6 +13,7 @@ class MediaIngestGUI(QMainWindow):
         self.init_ui()
 
         # Variables to store input data
+        self.project_name = ""
         self.import_path = ""
         self.export_path = ""
         self.media_type = ""
@@ -31,25 +31,19 @@ class MediaIngestGUI(QMainWindow):
         # Main layout for the interface
         main_layout = QVBoxLayout()
 
-        # Import Path
-        self.import_label = QLabel("Import Path:")
-        self.import_path_input = QLineEdit()
-        self.import_browse_button = QPushButton("Browse")
-        self.import_browse_button.clicked.connect(self.browse_import_path)
+        # Project Name Entry with informational default text (Above Media Type and Capture Date)
+        project_layout = QHBoxLayout()
 
-        main_layout.addWidget(self.import_label)
-        main_layout.addWidget(self.import_path_input)
-        main_layout.addWidget(self.import_browse_button)
+        self.project_name_label = QLabel("Project Name:")
+        self.project_name_input = QLineEdit()
+        self.project_name_input.setMaxLength(16)  # Limit to 16 characters
+        self.project_name_input.setPlaceholderText("Project Name")  # Informational default
 
-        # Export Path
-        self.export_label = QLabel("Export Path:")
-        self.export_path_input = QLineEdit()
-        self.export_browse_button = QPushButton("Browse")
-        self.export_browse_button.clicked.connect(self.browse_export_path)
+        project_layout.addWidget(self.project_name_label)
+        project_layout.addWidget(self.project_name_input)
 
-        main_layout.addWidget(self.export_label)
-        main_layout.addWidget(self.export_path_input)
-        main_layout.addWidget(self.export_browse_button)
+        # Add project layout to main layout
+        main_layout.addLayout(project_layout)
 
         # Media Type and Capture Date in a horizontal layout
         row_layout = QHBoxLayout()
@@ -73,6 +67,34 @@ class MediaIngestGUI(QMainWindow):
 
         # Add row layout to main layout
         main_layout.addLayout(row_layout)
+
+        # Import Path with label next to input
+        import_layout = QHBoxLayout()
+
+        self.import_label = QLabel("Import Path:")
+        self.import_path_input = QLineEdit()
+        self.import_browse_button = QPushButton("Browse")
+        self.import_browse_button.clicked.connect(self.browse_import_path)
+
+        import_layout.addWidget(self.import_label)
+        import_layout.addWidget(self.import_path_input)
+        import_layout.addWidget(self.import_browse_button)
+
+        main_layout.addLayout(import_layout)
+
+        # Export Path with label next to input
+        export_layout = QHBoxLayout()
+
+        self.export_label = QLabel("Export Path:")
+        self.export_path_input = QLineEdit()
+        self.export_browse_button = QPushButton("Browse")
+        self.export_browse_button.clicked.connect(self.browse_export_path)
+
+        export_layout.addWidget(self.export_label)
+        export_layout.addWidget(self.export_path_input)
+        export_layout.addWidget(self.export_browse_button)
+
+        main_layout.addLayout(export_layout)
 
         # Camera Number and Scene Number in a horizontal layout
         line_layout = QHBoxLayout()
@@ -119,7 +141,12 @@ class MediaIngestGUI(QMainWindow):
             self.export_path_input.setText(path)
 
     def store_data(self):
+        # Validate if all fields are filled
+        if not self.validate_fields():
+            return  # If validation fails, return and don't proceed
+
         # Fetch values from the GUI
+        self.project_name = self.project_name_input.text().replace(" ", "_")
         self.import_path = self.import_path_input.text()
         self.export_path = self.export_path_input.text()
         self.media_type = self.media_type_dropdown.currentText()
@@ -131,6 +158,7 @@ class MediaIngestGUI(QMainWindow):
         self.save_settings()
 
         # Debugging: Print values to the console
+        print(f"Project Name: {self.project_name}")
         print(f"Import Path: {self.import_path}")
         print(f"Export Path: {self.export_path}")
         print(f"Media Type: {self.media_type}")
@@ -138,9 +166,37 @@ class MediaIngestGUI(QMainWindow):
         print(f"Camera Number: {self.camera_number}")
         print(f"Scene Number: {self.scene_number}")
 
+    def validate_fields(self):
+        """Validate if all fields are filled in"""
+        if not self.project_name_input.text():
+            self.show_error_message("Project Name is required.")
+            return False
+        if not self.import_path_input.text():
+            self.show_error_message("Import Path is required.")
+            return False
+        if not self.export_path_input.text():
+            self.show_error_message("Export Path is required.")
+            return False
+        if not self.camera_number_input.text():
+            self.show_error_message("Camera Number is required.")
+            return False
+        if not self.scene_number_input.text():
+            self.show_error_message("Scene Number is required.")
+            return False
+        return True
+
+    def show_error_message(self, message):
+        """Show an error message to the user"""
+        error_dialog = QMessageBox()
+        error_dialog.setIcon(QMessageBox.Warning)
+        error_dialog.setWindowTitle("Validation Error")
+        error_dialog.setText(message)
+        error_dialog.exec_()
+
     def save_settings(self):
         """Save current settings to a file."""
         settings = {
+            "project_name": self.project_name_input.text().replace(" ", "_"),
             "import_path": self.import_path_input.text(),
             "export_path": self.export_path_input.text(),
             "media_type": self.media_type_dropdown.currentText(),
@@ -158,6 +214,7 @@ class MediaIngestGUI(QMainWindow):
                 settings = json.load(file)
 
                 # Restore values to the GUI
+                self.project_name_input.setText(settings.get("project_name", "").replace("_", " "))
                 self.import_path_input.setText(settings.get("import_path", ""))
                 self.export_path_input.setText(settings.get("export_path", ""))
                 media_type = settings.get("media_type", "Video")
