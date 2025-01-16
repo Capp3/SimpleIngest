@@ -1,5 +1,10 @@
 # SimpleIngest
+
 Simple media file renaming and importing tool
+
+## General Information
+
+### Captured Variables
 
 | Name         | Type   | input format  | Var Name | Desc.                 | Notes                                                           |
 |--------------|--------|---------------|----------|-----------------------|-----------------------------------------------------------------|
@@ -13,6 +18,8 @@ Simple media file renaming and importing tool
 | Media Type   | vars   | drop down     | M_TYPE   | Image or Video Files  |                                                                 |
 | File Num     | int    | auto          | F_NUM    | File Number           | Automated counter to number files as they are renamed           |
 | Log File     | path   | file explorer | LOG_PATH | Log file location     | Should be saved between sessions                                |
+
+### File formats 
 
 1. Video
    1. MOV
@@ -41,4 +48,23 @@ Simple media file renaming and importing tool
    6. AIFF
    7. PCM
 
-{PRJT}-C{C_DATE}-CM{CAM_ID}-S{SHOT_ID}-I{I_DATE}-{F_NUM}.{Existing Extension}
+### File Name format
+
+`{PRJT}-C{C_DATE}-CM{CAM_ID}-S{SHOT_ID}-I{I_DATE}-{F_NUM}.{Existing Extension}`
+
+## Installation and Run
+
+### Prerequisites
+
+- Python 3
+- Pip
+
+### Running via Python and CLI
+
+create venv and install requirements
+
+```bash
+python3 -m venv ingest
+source ingest/bin/activate
+pip install -r requirements.txt
+```
