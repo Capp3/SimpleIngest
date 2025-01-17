@@ -1,119 +1,145 @@
 # SimpleIngest
 
-Simple media file renaming and importing tool
+A lightweight tool for renaming, organising, and importing video, audio, and photo media files.
 
-## General Information
+## Overview
 
-Meeting simple needs, this is for video file ingest. This tool does not manage metadata in anyway. It renames, and copies files.
+SimpleIngest is designed to meet straightforward media ingest needs by standardising file naming and simplifying workflows. It renames and copies files without altering or managing metadata.
 
-The primary intention is for standardization of file naming. It intends to also build in a simple work flow.
+While there are many simular tools, this one suits our workflow and removes unnecessary clutter from the operator. File extensions and groups can be modified in the `config.py` file.
 
-The application is written in Python.
+This tool is written in Python and provides an intuitive interface for users to streamline the organisation of their media files.
 
-### How it works
+---
 
-After the application is started a simple GUI is provided and information requested
+- [SimpleIngest](#simpleingest)
+  - [Overview](#overview)
+  - [How It Works](#how-it-works)
+    - [Workflow](#workflow)
+  - [Installation and Usage](#installation-and-usage)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+      - [Manual Installation](#manual-installation)
+  - [Future Plans](#future-plans)
+  - [Contributing](#contributing)
+  - [License](#license)
+  - [Support](#support)
 
-| Field         | Description                                                         |
-|---------------|---------------------------------------------------------------------|
-| Project Name  | 16 Digits to identify the project                                   |
-| Import Path   | Select the directory where the files to import are                  |
-| Export Path   | Select the directory where the files are to end up                  |
-| Media Type    | What type of media are you importing, filters what files are copied |
-| Capture Date  | Date media was captured                                             |
-| Camera Number | 2 digits to identify camera (or source)                             |
-| Scene Number  | 4 digits to identify scene/shot                                     |
+## How It Works
 
-Once Activated the script does a few things
+After launching the application, a simple graphical user interface (GUI) is presented, requesting the following details:
 
-- Filters only the media files of the type selected
-- Renames the files to a standardized scheme, in place
-  - {Project Name}-C{Capture Date}-CM{Camera Number}-S{Scene Number}-I{Import Date}-{Number}.{Extension}
-- copies the files to the export directory
-- verifies the files have been moved
+| Field         | Description                                                                 |
+|---------------|-----------------------------------------------------------------------------|
+| **Project Name**  | A unique 16-character identifier for the project.                        |
+| **Import Path**   | Directory where the source files are located.                            |
+| **Export Path**   | Directory where the processed files will be saved.                       |
+| **Media Type**    | Type of media being imported (filters files by extension).               |
+| **Capture Date**  | Date the media was captured (in `DD/MM/YYYY` format).                    |
+| **Camera Number** | A 2-digit identifier for the camera or source.                           |
+| **Scene Number**  | A 4-digit identifier for the scene or shot.                              |
 
-The files are renamed in place to allow for SD formatting applications that search local storage before erasing media.
+### Workflow
 
-## Installation and Run
+1. **File Filtering**:
+   - Only media files matching the selected type are processed.
+2. **Renaming**:
+   - Files are renamed based on a standardised format:
+
+     ```text
+     {Project Name}-C{Capture Date}-CM{Camera Number}-S{Scene Number}-I{Import Date}-{Number}.{Extension}
+     ```
+
+   - Example: `MyProject-C20230101-CM01-S0001-I20250117-0001.mp4`
+3. **File Copying**:
+   - Files are copied to the specified export directory.
+4. **Verification**:
+   - Ensures all files are successfully moved.
+
+> **Note**: Files are renamed in place to support workflows that require SD card formatting applications to scan local storage before erasing media.
+
+---
+
+## Installation and Usage
 
 ### Prerequisites
 
-- Python 3
-- Pip
+- Python 3.x
+- Pip (Python package manager)
 
 ### Installation
 
-These instructions are used and tested on an Apple computer. Linux should be much the same. Windows instructions may come, but keep an eye on the releases page for an executable.
+These instructions are tested on macOS and should also apply to Linux. Windows instructions may follow in future releases. For Windows users, keep an eye on the [Releases Page](https://github.com/Capp3/SimpleIngest/releases) for a standalone executable.
 
 #### Manual Installation
 
-```bash
-# Clone Github Repo
-git clone https://github.com/Capp3/SimpleIngest.git
-# Navigate to Simple Ingest Directory
-cd SimpleIngest
-# Create Python Virtual Environment
-python3 -m venv ingest
-# Activate Python Environment
-source ingest/bin/activate
-# Install Requirements
-pip install -r requirements.txt
-```
+1. Clone the repository:
 
-The application can then be started
+   ```bash
+   git clone https://github.com/Capp3/SimpleIngest.git
+   ```
 
-```bash
-python3 simpleingest.py
-```
+2. Navigate to the project directory:
 
-## Programming notes below, be warned
+   ```bash
+   cd SimpleIngest
+   ```
 
-### Captured Variables
+3. Create a Python virtual environment:
 
-| Name         | Type   | input format  | Var Name | Desc.                 | Notes                                        |
-|--------------|--------|---------------|----------|-----------------------|----------------------------------------------|
-| Import Path  | path   | file explorer | I_PATH   | content directory     |                                              |
-| Export Path  | path   | file explorer | E_PATH   | Destination Directory | must allow for new directory creation        |
-| Capture Date | DATE   | DD/MM/YYYY    | C_DATE   | Date media captured   | convert to YYYYMMDD                          |
-| Import Date  | DATE   | YYYYMMDD      | I_DATE   | Date media imported   | auto                                         |
-| Camera Num   | int    | ##            | CAM_ID   | Camera Used           |                                              |
-| Scene Num    | int    | ####          | SHOT_ID  | Scene Number          |                                              |
-| Project      | string | text          | PRJT     | Project Name          | Limit 16 digits,spaces changed to underscore |
-| Media Type   | vars   | drop down     | M_TYPE   | Image or Video Files  |                                              |
-| File Num     | int    | auto          | F_NUM    | File Number           | Automated counter                            |
-| Log File     | path   | file explorer | LOG_PATH | Log file location     |                                              |
+   ```bash
+   python3 -m venv ingest
+   ```
 
-### File formats 
+4. Activate the virtual environment:
 
-1. Video
-   1. MOV
-   2. MP4
-   3. M4V
-   4. FLV
-   5. AVI
-   6. WMV
-   7. MPEG
-   8. RAW
-   9. AVCHD
-   10. MKV
-2. Images
-    1. JPG
-    2. JPEG
-    3. GIF
-    4. PNG
-    5. TIFF
-    6. PSD
-3. Audio
-   1. MP3
-   2. M4A
-   3. WAV
-   4. FLAC
-   5. AAC
-   6. AIFF
-   7. PCM
+   ```bash
+   source ingest/bin/activate
+   ```
 
-### File Name format
+5. Install the required dependencies:
 
-`{PRJT}-C{C_DATE}-CM{CAM_ID}-S{SHOT_ID}-I{I_DATE}-{F_NUM}.{Existing Extension}`
+   ```bash
+   pip install -r requirements.txt
+   ```
 
+6. Start the application:
 
+   ```bash
+   python3 simpleingest.py
+   ```
+
+---
+
+## Future Plans
+
+- Fix persistent settings
+- Useful Progress Bar
+- Selected field inclusion
+- Add Windows installation instructions.
+- Release standalone executables for macOS and Windows.
+- Incorporate additional metadata management features.
+
+---
+
+## Contributing
+
+Contributions are welcome! If you'd like to improve the tool or add features:
+
+1. Fork the repository.
+2. Create a feature branch (`git checkout -b feature-name`).
+3. Commit your changes (`git commit -m 'Add feature'`).
+4. Push to the branch (`git push origin feature-name`).
+5. Open a pull request.
+
+---
+
+## License
+
+This project is licensed under the [GNU GENERAL PUBLIC LICENSE](LICENSE).
+
+---
+
+## Support
+
+If you encounter issues or have questions, feel free to open an issue on the [GitHub repository](https://github.com/Capp3/SimpleIngest/issues).

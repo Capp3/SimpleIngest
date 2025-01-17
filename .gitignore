@@ -15,3 +15,5 @@ dist/
 .venv/
 
 .DS_Store
+
+*.spec

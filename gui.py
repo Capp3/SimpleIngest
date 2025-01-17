@@ -148,6 +148,10 @@ class MediaIngestGUI(QMainWindow):
         self.scene_number = self.scene_number_input.text()
 
         try:
+            # Save settings before processing
+            self.save_settings()
+
+            # Start batch processing
             process_batch(
                 self.import_path, self.export_path,
                 self.project_name, self.media_type,
@@ -157,6 +161,11 @@ class MediaIngestGUI(QMainWindow):
             QMessageBox.information(self, "Success", "Batch process completed successfully.")
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Batch process failed: {e}")
+
+    def closeEvent(self, event):
+        """Save settings when the application is closed."""
+        self.save_settings()
+        event.accept()
 
     def validate_fields(self):
         if not self.project_name_input.text():
@@ -190,7 +199,6 @@ class MediaIngestGUI(QMainWindow):
             "import_path": self.import_path,
             "export_path": self.export_path,
             "media_type": self.media_type,
-            "capture_date": self.capture_date,
             "camera_number": self.camera_number,
             "scene_number": self.scene_number,
         }
