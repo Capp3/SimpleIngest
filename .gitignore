@@ -13,3 +13,5 @@ simpleingest.log
 build/
 dist/
 .venv/
+
+.DS_Store
