@@ -7,3 +7,9 @@ ingest/
 log/
 
 scratch.md
+
+simpleingest.log
+
+build/
+dist/
+.venv/

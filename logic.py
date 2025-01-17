@@ -2,7 +2,7 @@ import os
 import shutil
 import logging
 from datetime import datetime
-from config import VALID_FILE_EXTENSIONS, LOGGING
+from config import VALID_FILE_EXTENSIONS, LOGGING, LOG_FILE
 
 # Configure Logging
 def setup_logging():
@@ -16,7 +16,7 @@ def setup_logging():
         level=log_level,
         format=log_format,
         datefmt=date_format,
-        filename=log_file if log_file else None,
+        filename=LOG_FILE,
         filemode="a",
     )
     if not log_file:

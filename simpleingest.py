@@ -2,14 +2,18 @@ import sys
 import logging
 from PyQt5.QtWidgets import QApplication
 from gui import MediaIngestGUI
+from config import (
+    LOG_FILE
+)
 
 # Configure logging
 def configure_logging():
     logging.basicConfig(
+        filename=LOG_FILE,
         level=logging.INFO,  # Default level can be adjusted to DEBUG or ERROR
         format="%(asctime)s - %(levelname)s - %(message)s",
         handlers=[
-            logging.FileHandler("media_ingest.log"),  # Logs to a file
+            logging.FileHandler(LOG_FILE),           # Logs to a file
             logging.StreamHandler(sys.stdout),       # Logs to console
         ]
     )
