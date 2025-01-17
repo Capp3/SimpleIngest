@@ -2,11 +2,11 @@ from PyQt5.QtWidgets import (
     QMainWindow, QLabel, QLineEdit, QComboBox, QPushButton, QVBoxLayout,
     QProgressBar, QWidget, QFileDialog, QHBoxLayout, QDateEdit, QMessageBox
 )
-from PyQt5.QtCore import QDate
+from PyQt5.QtCore import QDate, QThread, pyqtSignal
 import logging
 import os
 import json
-from logic import process_batch
+from logic import scan_directory, filter_files_by_extension
 from config import (
     SETTINGS_FILE, LOG_FILE, VALID_FILE_EXTENSIONS,
     CAMERA_NUMBER_PATTERN, SCENE_NUMBER_PATTERN,
@@ -14,6 +14,47 @@ from config import (
     APP_NAME, VERSION
 )
 import re
+
+
+class BatchProcessThread(QThread):
+    progress_updated = pyqtSignal(int)
+    completed = pyqtSignal()
+    error_occurred = pyqtSignal(str)
+
+    def __init__(self, import_path, export_path, project_name, media_type, capture_date, camera_number, scene_number):
+        super().__init__()
+        self.import_path = import_path
+        self.export_path = export_path
+        self.project_name = project_name
+        self.media_type = media_type
+        self.capture_date = capture_date
+        self.camera_number = camera_number
+        self.scene_number = scene_number
+
+    def run(self):
+        try:
+            # Scan and process files
+            file_list = scan_directory(self.import_path)
+            filtered_files = filter_files_by_extension(file_list, self.media_type)
+            total_files = len(filtered_files)
+
+            for index, file in enumerate(filtered_files, start=1):
+                # Simulate renaming operation
+                dir_path = os.path.dirname(file)
+                ext = os.path.splitext(file)[1]
+                new_name = f"{self.project_name}_{index:04d}{ext}"
+                new_path = os.path.join(dir_path, new_name)
+                os.rename(file, new_path)
+
+                # Emit progress update
+                self.progress_updated.emit(int(index / total_files * 100))
+
+            # Emit completion signal
+            self.completed.emit()
+        except Exception as e:
+            # Emit error signal
+            self.error_occurred.emit(str(e))
+
 
 class MediaIngestGUI(QMainWindow):
     def __init__(self):
@@ -151,16 +192,28 @@ class MediaIngestGUI(QMainWindow):
             # Save settings before processing
             self.save_settings()
 
-            # Start batch processing
-            process_batch(
+            # Set up progress bar
+            self.progress_bar.setValue(0)
+
+            # Start the processing thread
+            self.thread = BatchProcessThread(
                 self.import_path, self.export_path,
                 self.project_name, self.media_type,
                 self.capture_date, self.camera_number,
                 self.scene_number
             )
-            QMessageBox.information(self, "Success", "Batch process completed successfully.")
+            self.thread.progress_updated.connect(self.progress_bar.setValue)
+            self.thread.completed.connect(self.on_process_completed)
+            self.thread.error_occurred.connect(self.on_process_error)
+            self.thread.start()
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Batch process failed: {e}")
+
+    def on_process_completed(self):
+        QMessageBox.information(self, "Success", "Batch process completed successfully.")
+
+    def on_process_error(self, error_message):
+        QMessageBox.critical(self, "Error", f"Batch process failed: {error_message}")
 
     def closeEvent(self, event):
         """Save settings when the application is closed."""
@@ -218,6 +271,7 @@ class MediaIngestGUI(QMainWindow):
                 )
                 self.camera_number_input.setText(settings.get("camera_number", ""))
                 self.scene_number_input.setText(settings.get("scene_number", ""))
+
 
 # Run the application
 if __name__ == "__main__":
