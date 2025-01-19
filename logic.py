@@ -6,7 +6,6 @@ from config import VALID_FILE_EXTENSIONS, LOGGING, LOG_FILE
 
 # Configure Logging
 def setup_logging():
-    """Sets up logging using the configuration from config.py."""
     log_level = getattr(logging, LOGGING.get("level", "INFO").upper(), logging.INFO)
     log_format = LOGGING.get("format", "%(asctime)s - %(levelname)s - %(message)s")
     date_format = LOGGING.get("datefmt", "%Y-%m-%d %H:%M:%S")
@@ -26,10 +25,9 @@ def setup_logging():
         console_handler.setFormatter(logging.Formatter(log_format, date_format))
         logging.getLogger().addHandler(console_handler)
 
-# Call setup_logging at the beginning of your script
 setup_logging()
 
-# Example log messages to verify setup
+# log messages to verify setup
 logging.debug("Debugging mode enabled.")
 logging.info("Starting the script.")
 logging.warning("This is a warning message.")
