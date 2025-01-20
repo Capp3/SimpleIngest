@@ -3,7 +3,9 @@ __pycache__/
 settings.json
 
 venv/
+.venv/
 ingest/
+
 log/
 
 scratch.md
@@ -12,10 +14,14 @@ simpleingest.log
 
 build/
 dist/
-.venv/
+
 
 .DS_Store
 
 *.spec
 
 .vscode/
+
+.pytest_cache/
+
+.idea/

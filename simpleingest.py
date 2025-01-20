@@ -1,9 +1,9 @@
 import sys
 import logging
 from PyQt5.QtWidgets import QApplication
-from gui import MediaIngestGUI
+from main import MediaIngestGUI
 from config import (
-    LOG_FILE
+    LOG_FILE, LOG_LEVEL
 )
 
 # Configure logging
