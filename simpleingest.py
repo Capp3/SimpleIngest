@@ -1,7 +1,7 @@
 import sys
 import logging
 from PyQt5.QtWidgets import QApplication
-from main import MediaIngestGUI
+from app.main import MediaIngestGUI
 from config import (
     LOG_FILE, LOG_LEVEL
 )
@@ -9,7 +9,6 @@ from config import (
 # Configure logging
 def configure_logging():
     logging.basicConfig(
-        filename=LOG_FILE,
         level=logging.INFO,  # Default level can be adjusted to DEBUG or ERROR
         format="%(asctime)s - %(levelname)s - %(message)s",
         handlers=[

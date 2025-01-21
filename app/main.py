@@ -6,8 +6,9 @@ from PyQt5.QtCore import QDate, QThread, pyqtSignal
 import logging
 import os
 import json
+import shutil
 from datetime import datetime
-from app.config import (
+from config import (
     SETTINGS_FILE, LOG_FILE, VALID_FILE_EXTENSIONS,
     DEFAULT_MEDIA_TYPE, DEFAULT_CAPTURE_DATE_FORMAT,
     CAMERA_NUMBER_PATTERN, SCENE_NUMBER_PATTERN,
