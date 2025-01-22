@@ -9,7 +9,7 @@ from config import (
 # Configure logging
 def configure_logging():
     logging.basicConfig(
-        level=logging.INFO,  # Default level can be adjusted to DEBUG or ERROR
+        level=LOG_LEVEL,  # Default level can be adjusted to DEBUG or ERROR
         format="%(asctime)s - %(levelname)s - %(message)s",
         handlers=[
             logging.FileHandler(LOG_FILE),           # Logs to a file
