@@ -1,5 +1,23 @@
 # Notepad
 
+## Structure
+
+```
+SimpleIngest
+ |- README.md             # Readme File
+ |- .gitignore
+ |- simpleingest.sh       # Mac Launch Script
+ |- simpleingest.py       # Python Entry Script
+ |- config.py             # python variables
+ |- requirements.txt      # Python Requirements
+ |- settings.json         # Settings File
+ |- log
+ |   |-simpleingest.log
+ |- app
+     |- main.py          
+     |- threads.py        # Batch Process Thread
+```
+
 ## Captured Variables
 
 | Name         | Type   | input format  | Var Name | Desc.                 | Notes                                        |
