@@ -36,17 +36,24 @@ class MediaIngestGUI(QMainWindow):
 
     def init_logging(self):
         """Initialise logging with a handler for the console window."""
+        # Create the text edit for displaying logs in the GUI
         self.log_console = QPlainTextEdit()
         self.log_console.setReadOnly(True)
 
-        logging.basicConfig(
-            level=logging.INFO,
-            format="%(asctime)s - %(levelname)s - %(message)s",
-            handlers=[
-                logging.FileHandler(LOG_FILE),
-                LogHandler(self.log_console)  # Custom handler for GUI console
-            ]
-        )
+        # Set up logging handlers
+        file_handler = logging.FileHandler(LOG_FILE)
+        file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+
+        gui_handler = LogHandler(self.log_console)  # Custom handler for GUI console
+        gui_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+
+        # Get the root logger and add handlers
+        root_logger = logging.getLogger()
+        root_logger.setLevel(logging.DEBUG)  # Adjust the log level if needed
+        root_logger.addHandler(file_handler)
+        root_logger.addHandler(gui_handler)
+
+        # Log the start of the application
         logging.info(f"Starting {APP_NAME} v{VERSION}")
 
     def init_ui(self):
@@ -145,6 +152,38 @@ class MediaIngestGUI(QMainWindow):
         if path:
             self.export_path_input.setText(path)
 
+    def format_camera_number(self):
+        """Format the camera number to match the required pattern."""
+        text = self.camera_number_input.text()
+        required_length = len(re.findall(r"\d", CAMERA_NUMBER_PATTERN)[0])
+
+        if len(text) > required_length:
+            # Input too long
+            self.camera_number_input.setStyleSheet("border: 2px solid red;")
+        elif len(text) < required_length:
+            # Pad with leading zeros
+            self.camera_number_input.setText(text.zfill(required_length))
+            self.camera_number_input.setStyleSheet("")  # Reset style
+        elif len(text) == required_length:
+            # Valid input
+            self.camera_number_input.setStyleSheet("")
+
+    def format_scene_number(self):
+        """Format the scene number to match the required pattern."""
+        text = self.scene_number_input.text()
+        required_length = len(re.findall(r"\d", SCENE_NUMBER_PATTERN)[0])
+
+        if len(text) > required_length:
+            # Input too long
+            self.scene_number_input.setStyleSheet("border: 2px solid red;")
+        elif len(text) < required_length:
+            # Pad with leading zeros
+            self.scene_number_input.setText(text.zfill(required_length))
+            self.scene_number_input.setStyleSheet("")  # Reset style
+        elif len(text) == required_length:
+            # Valid input
+            self.scene_number_input.setStyleSheet("")
+
     def start_batch_process(self):
         # Validation
         if not self.project_name_input.text() or not self.import_path_input.text() or not self.export_path_input.text():
@@ -165,38 +204,6 @@ class MediaIngestGUI(QMainWindow):
         self.thread.completed.connect(lambda: QMessageBox.information(self, "Success", "Process completed!"))
         self.thread.error_occurred.connect(lambda msg: QMessageBox.critical(self, "Error", msg))
         self.thread.start()
-
-    def format_camera_number(self):
-        """Format the camera number to match the required pattern."""
-        text = self.camera_number_input.text()
-        required_length = len(re.findall(r"\d", CAMERA_NUMBER_PATTERN)[0])
-
-        if len(text) < required_length:
-            # Pad with leading zeros
-            self.camera_number_input.setText(text.zfill(required_length))
-            self.camera_number_input.setStyleSheet("")  # Reset style
-        elif len(text) > required_length:
-            # Input too long
-            self.camera_number_input.setStyleSheet("border: 2px solid red;")
-        else:
-            # Valid input
-            self.camera_number_input.setStyleSheet("")
-
-    def format_scene_number(self):
-        """Format the scene number to match the required pattern."""
-        text = self.scene_number_input.text()
-        required_length = len(re.findall(r"\d", SCENE_NUMBER_PATTERN)[0])
-
-        if len(text) < required_length:
-            # Pad with leading zeros
-            self.scene_number_input.setText(text.zfill(required_length))
-            self.scene_number_input.setStyleSheet("")  # Reset style
-        elif len(text) > required_length:
-            # Input too long
-            self.scene_number_input.setStyleSheet("border: 2px solid red;")
-        else:
-            # Valid input
-            self.scene_number_input.setStyleSheet("")
 
     def save_settings(self):
         settings = {
