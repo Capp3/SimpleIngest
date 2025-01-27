@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication
-from gui import MediaIngestGUI
+from app.gui import MediaIngestGUI
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

@@ -6,16 +6,17 @@
 SimpleIngest
  |- README.md             # Readme File
  |- .gitignore
- |- simpleingest.sh       # Mac Launch Script
+ |- sample.env            # ENV File for low level options
  |- simpleingest.py       # Python Entry Script
- |- config.py             # python variables
  |- requirements.txt      # Python Requirements
  |- settings.json         # Settings File
  |- log
  |   |-simpleingest.log
  |- app
-     |- main.py          
+     |- main.py           # Main process script
      |- threads.py        # Batch Process Thread
+     |- config.py         # python variables
+     |- gui.py            # QT windowing with var entry validation
 ```
 
 ## Captured Variables

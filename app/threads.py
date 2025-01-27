@@ -2,7 +2,7 @@ from PyQt5.QtCore import QThread, pyqtSignal
 import os
 import shutil
 from datetime import datetime
-from config import (
+from app.config import (
     VALID_FILE_EXTENSIONS
 )
 

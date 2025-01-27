@@ -6,7 +6,8 @@ from PyQt5.QtCore import QDate
 import logging
 import os
 import json
-from config import (
+import re
+from app.config import (
     SETTINGS_FILE, LOG_FILE, VALID_FILE_EXTENSIONS,
     DEFAULT_MEDIA_TYPE, DEFAULT_CAPTURE_DATE_FORMAT,
     APP_NAME, VERSION, CAMERA_NUMBER_PATTERN, SCENE_NUMBER_PATTERN
@@ -51,6 +52,7 @@ class MediaIngestGUI(QMainWindow):
         project_layout = QHBoxLayout()
         self.project_name_label = QLabel("Project Name:")
         self.project_name_input = QLineEdit()
+        self.project_name_input.setPlaceholderText("Enter project name here")
         project_layout.addWidget(self.project_name_label)
         project_layout.addWidget(self.project_name_input)
         main_layout.addLayout(project_layout)
@@ -96,8 +98,14 @@ class MediaIngestGUI(QMainWindow):
         camera_scene_layout = QHBoxLayout()
         self.camera_number_label = QLabel("Camera Number:")
         self.camera_number_input = QLineEdit()
+        self.camera_number_input.setPlaceholderText("01")
+        self.camera_number_input.editingFinished.connect(self.format_camera_number)  # Connect to formatting
+
         self.scene_number_label = QLabel("Scene Number:")
         self.scene_number_input = QLineEdit()
+        self.scene_number_input.setPlaceholderText("1234")
+        self.scene_number_input.editingFinished.connect(self.format_scene_number)  # Connect to formatting
+
         camera_scene_layout.addWidget(self.camera_number_label)
         camera_scene_layout.addWidget(self.camera_number_input)
         camera_scene_layout.addWidget(self.scene_number_label)
@@ -146,6 +154,38 @@ class MediaIngestGUI(QMainWindow):
         self.thread.completed.connect(lambda: QMessageBox.information(self, "Success", "Process completed!"))
         self.thread.error_occurred.connect(lambda msg: QMessageBox.critical(self, "Error", msg))
         self.thread.start()
+
+    def format_camera_number(self):
+        """Format the camera number to match the required pattern."""
+        text = self.camera_number_input.text()
+        required_length = len(re.findall(r"\d", CAMERA_NUMBER_PATTERN)[0])
+
+        if len(text) < required_length:
+            # Pad with leading zeros
+            self.camera_number_input.setText(text.zfill(required_length))
+            self.camera_number_input.setStyleSheet("")  # Reset style
+        elif len(text) > required_length:
+            # Input too long
+            self.camera_number_input.setStyleSheet("border: 2px solid red;")
+        else:
+            # Valid input
+            self.camera_number_input.setStyleSheet("")
+
+    def format_scene_number(self):
+        """Format the scene number to match the required pattern."""
+        text = self.scene_number_input.text()
+        required_length = len(re.findall(r"\d", SCENE_NUMBER_PATTERN)[0])
+
+        if len(text) < required_length:
+            # Pad with leading zeros
+            self.scene_number_input.setText(text.zfill(required_length))
+            self.scene_number_input.setStyleSheet("")  # Reset style
+        elif len(text) > required_length:
+            # Input too long
+            self.scene_number_input.setStyleSheet("border: 2px solid red;")
+        else:
+            # Valid input
+            self.scene_number_input.setStyleSheet("")
 
     def save_settings(self):
         settings = {
