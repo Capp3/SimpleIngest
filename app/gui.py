@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import (
-    QMainWindow, QLabel, QLineEdit, QComboBox, QPushButton, QVBoxLayout,
+    QMainWindow, QLabel, QLineEdit, QComboBox, QPushButton, QVBoxLayout, QPlainTextEdit,
     QProgressBar, QWidget, QFileDialog, QHBoxLayout, QDateEdit, QMessageBox
 )
 from PyQt5.QtCore import QDate
@@ -13,6 +13,7 @@ from app.config import (
     APP_NAME, VERSION, CAMERA_NUMBER_PATTERN, SCENE_NUMBER_PATTERN
 )
 from app.threads import BatchProcessThread
+# from app.consolehandler import LogHandler
 
 
 class MediaIngestGUI(QMainWindow):
@@ -34,16 +35,23 @@ class MediaIngestGUI(QMainWindow):
         self.load_settings()
 
     def init_logging(self):
+        """Initialise logging with a handler for the console window."""
+        self.log_console = QPlainTextEdit()
+        self.log_console.setReadOnly(True)
+
         logging.basicConfig(
-            filename=LOG_FILE,
             level=logging.INFO,
-            format="gui - %(asctime)s - %(levelname)s - %(message)s"
+            format="%(asctime)s - %(levelname)s - %(message)s",
+            handlers=[
+                logging.FileHandler(LOG_FILE),
+                LogHandler(self.log_console)  # Custom handler for GUI console
+            ]
         )
         logging.info(f"Starting {APP_NAME} v{VERSION}")
 
     def init_ui(self):
         self.setWindowTitle(APP_NAME)
-        self.setGeometry(100, 100, 600, 400)
+        self.setGeometry(100, 100, 600, 500)
 
         # Main layout
         main_layout = QVBoxLayout()
@@ -118,6 +126,9 @@ class MediaIngestGUI(QMainWindow):
         main_layout.addWidget(self.activate_button)
         self.progress_bar = QProgressBar()
         main_layout.addWidget(self.progress_bar)
+
+        # Console Window
+        main_layout.addWidget(self.log_console)
 
         # Finalise layout
         container = QWidget()
@@ -211,3 +222,16 @@ class MediaIngestGUI(QMainWindow):
                 self.capture_date_selector.setDate(QDate.fromString(settings.get("capture_date", ""), DEFAULT_CAPTURE_DATE_FORMAT))
                 self.camera_number_input.setText(settings.get("camera_number", ""))
                 self.scene_number_input.setText(settings.get("scene_number", ""))
+
+class LogHandler(logging.Handler):
+    """Custom logging handler to output logs to a QTextEdit."""
+    def __init__(self, text_edit):
+        super().__init__()
+        self.text_edit = text_edit
+
+    def emit(self, record):
+        message = self.format(record)
+        self.text_edit.appendPlainText(message)
+        self.text_edit.verticalScrollBar().setValue(
+            self.text_edit.verticalScrollBar().maximum()
+        )
