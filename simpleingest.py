@@ -8,10 +8,8 @@ from app.config import (
 
 # Configure logging
 def configure_logging():
-    """
-    Sets up logging configuration for the application.
-    Logs messages to both a file and the console.
-    """
+    # Sets up logging configuration for the application.
+    # Logs messages to both a file and the console.
     logging.basicConfig(
         level=LOG_LEVEL,  # Set the logging level (e.g., DEBUG, INFO, ERROR)
         format="%(asctime)s - %(levelname)s - %(message)s",  # Define log message format
@@ -23,10 +21,8 @@ def configure_logging():
 
 # Exception hook to catch uncaught exceptions
 def exception_hook(exc_type, exc_value, traceback):
-    """
-    Handles uncaught exceptions by logging them as critical errors.
-    Ensures all unhandled exceptions are logged for debugging purposes.
-    """
+    # Handles uncaught exceptions by logging them as critical errors.
+    # Ensures all unhandled exceptions are logged for debugging purposes.
     logging.critical("Uncaught exception", exc_info=(exc_type, exc_value, traceback))
     sys.__excepthook__(exc_type, exc_value, traceback)
 

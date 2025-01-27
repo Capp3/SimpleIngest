@@ -20,6 +20,9 @@ This tool is written in Python and provides an intuitive interface for users to 
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
       - [Manual Installation](#manual-installation)
+    - [Running](#running)
+      - [Running with python](#running-with-python)
+      - [Creating Launch Icon on MacOS](#creating-launch-icon-on-macos)
   - [Future Plans](#future-plans)
   - [Contributing](#contributing)
   - [License](#license)
@@ -109,12 +112,41 @@ These instructions are tested on macOS and should also apply to Linux. Windows i
    python3 simpleingest.py
    ```
 
+### Running
+
+#### Running with python
+
+Once the program is installed it can then be run from the command line
+
+1. Navigate to Program Direcoty
+
+   ```bash
+   /path/Simplingest
+   ```
+
+2. Start VENV
+
+   ```bash
+   source ingest/bin/activate
+   ```
+
+3. Start the application:
+
+   ```bash
+   python3 simpleingest.py
+   ```
+
+#### Creating Launch Icon on MacOS
+
+Launch `Shortcuts`
+
+I'll be back right after this candy bar....
+
 ---
 
 ## Future Plans
 
 - Fix persistent settings
-- Useful Progress Bar
 - Selected field inclusion
 - Add Windows installation instructions.
 - Release standalone executables for macOS and Windows.
