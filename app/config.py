@@ -8,7 +8,7 @@ load_dotenv(ENV_FILE)
 
 # Application Metadata
 APP_NAME = os.getenv("APP_NAME", "Simple Ingest Tool")
-VERSION = os.getenv("VERSION", "1.1.0")
+VERSION = os.getenv("VERSION", "1.1.1")
 
 # File and Directory Configuration
 LOG_DIR = os.getenv("LOG_DIR", os.path.join(BASE_DIR, "log"))
@@ -16,8 +16,8 @@ LOG_FILE = os.path.join(LOG_DIR, "simpleingest.log")
 SETTINGS_FILE = os.path.join(BASE_DIR, "settings.json")
 
 # Validation Rules
-CAMERA_NUMBER_PATTERN = r"\d{2}"  # Exactly 2 digits
-SCENE_NUMBER_PATTERN = r"\d{4}"   # Exactly 4 digits
+CAMERA_NUMBER_PATTERN = r"\b\d{2}\b"  # Exactly 2 digits
+SCENE_NUMBER_PATTERN = r"\b\d{4}\b"   # Exactly 4 digits
 
 # Default Settings
 DEFAULT_MEDIA_TYPE = os.getenv("DEFAULT_MEDIA_TYPE", "Video")
@@ -31,7 +31,7 @@ VALID_FILE_EXTENSIONS = {
 }
 
 # Logging Configuration
-LOG_LEVEL = os.getenv("LOG_LEVEL", "info")
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
 
 # Ensure required directories exist
