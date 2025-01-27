@@ -2,6 +2,8 @@
 
 A lightweight tool for renaming, organising, and importing video, audio, and photo media files.
 
+![Interface](/images/simpleingest.PNG)
+
 ## Overview
 
 SimpleIngest is designed to meet straightforward media ingest needs by standardising file naming and simplifying workflows. It renames and copies files without altering or managing metadata.
