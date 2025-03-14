@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "redhat.ansible",
+    "redhat.vscode-yaml",
+    "vscode-pyright", // Provides FOSS-based language support
+    "richardwillis.vscode-ansible-linter",
+    "esbenp.prettier-vscode",
+    "eamodio.gitlens",
+    "dhoeric.ansible-vault",
+    "github.copilot",
+    "github.copilot-chat",
+    "yzhang.markdown-all-in-one"
+  ]
+}

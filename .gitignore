@@ -2,8 +2,6 @@ __pycache__/
 
 .env
 
-settings.json
-
 venv/
 .venv/
 ingest/
@@ -21,8 +19,6 @@ dist/
 .DS_Store
 
 *.spec
-
-.vscode/
 
 .pytest_cache/
 
