@@ -36,9 +36,9 @@ class BatchProcessThread(QThread):
             # Log the start of the batch process with details about the input parameters.
             logging.info("Batch process started.")
             logging.debug(f"Parameters: Import Path: {self.import_path}, Export Path: {self.export_path}, "
-                          f"Project Name: {self.project_name}, Media Type: {self.media_type}, "
-                          f"Capture Date: {self.capture_date}, Camera Number: {self.camera_number}, "
-                          f"Scene Number: {self.scene_number}")
+                        f"Project Name: {self.project_name}, Media Type: {self.media_type}, "
+                        f"Capture Date: {self.capture_date}, Camera Number: {self.camera_number}, "
+                        f"Scene Number: {self.scene_number}")
 
             # Scan the import directory for files and log the file list.
             logging.info(f"Scanning directory: {self.import_path}")

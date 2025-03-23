@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+    ],
+    "settings": {
+        "files.associations": {
+            "**/docker/*.yml": "dockercompose",
+            "**/docker/*.yaml": "dockercompose",
+            "**/*.yml": "yaml",
+            "**/*.yaml": "yaml"
+        },
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.defaultProfile.osx": "zsh",
+        "terminal.integrated.env.linux": {
+            "VIRTUAL_ENV": "${workspaceFolder}/ingest",
+            "PATH": "${workspaceFolder}/ingest/bin:${env:PATH}"
+        },
+        "terminal.integrated.env.osx": {
+            "VIRTUAL_ENV": "${workspaceFolder}/ingest",
+            "PATH": "${workspaceFolder}/ingest/bin:${env:PATH}"
+        }
+    }
+}
