@@ -45,7 +45,7 @@ class BatchProcessThread(QThread):
             file_list = [
                 os.path.join(self.import_path, f)
                 for f in os.listdir(self.import_path)
-                if os.path.isfile(os.path.join(self.import_path, f))
+                if os.path.isfile(os.path.join(self.import_path, f)) and not f.startswith(".")
             ]
             logging.debug(f"Found files: {file_list}")
             if not file_list:
